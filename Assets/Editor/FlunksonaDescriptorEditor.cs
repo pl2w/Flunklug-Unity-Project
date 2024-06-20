@@ -22,9 +22,38 @@ namespace Flunklug
             descriptor.Name = EditorGUILayout.TextField(descriptor.Name);
             EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.Space();
+
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Throw Strength");
             descriptor.ThrowStrength = EditorGUILayout.FloatField(descriptor.ThrowStrength);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Fast Movement Speed");
+            descriptor.FastMoveSpeed = EditorGUILayout.FloatField(descriptor.FastMoveSpeed);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Grab Audio");
+            descriptor.GrabAudio = (AudioSource)EditorGUILayout.ObjectField(descriptor.GrabAudio, typeof(AudioSource));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Drop Audio");
+            descriptor.DropAudio = (AudioSource)EditorGUILayout.ObjectField(descriptor.DropAudio, typeof(AudioSource));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Collision Audio");
+            descriptor.CollisionAudio = (AudioSource)EditorGUILayout.ObjectField(descriptor.CollisionAudio, typeof(AudioSource));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Fast Movement Audio");
+            descriptor.FastMoveAudio = (AudioSource)EditorGUILayout.ObjectField(descriptor.FastMoveAudio, typeof(AudioSource));
             EditorGUILayout.EndHorizontal();
 
             if (GUILayout.Button($"Export {descriptor.Name}"))
@@ -46,7 +75,12 @@ namespace Flunklug
                 assetBundleName = $"{descriptor.Name}.flunksona"
             };
 
-            string directory = EditorUtility.OpenFolderPanel("Select Export Location", "", "");
+            string file = EditorUtility.SaveFilePanel("Select Export Location", "", descriptor.Name, "flunksona");
+
+            if (File.Exists(file))
+                File.Delete(file);
+
+            string directory = Path.GetDirectoryName(file);
 
             BuildPipeline.BuildAssetBundles(
                 Application.temporaryCachePath,
